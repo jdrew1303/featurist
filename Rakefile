@@ -15,8 +15,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "featurist"
   gem.homepage = "http://github.com/jonarcher/featurist"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Publish your Gherkin (Cucumber, SpecFlow) .feature files as a "traditional looking" requirements specification.}
+  gem.description = %Q{Publish your Gherkin (Cucumber, SpecFlow) .feature files as a "traditional looking" requirements specification.}
   gem.email = "jon@rollinsville.org"
   gem.authors = ["Jon Archer"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
