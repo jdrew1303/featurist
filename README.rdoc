@@ -1,6 +1,20 @@
 = featurist
 
-Description goes here.
+Publish your Gherkin (Cucumber, SpecFlow) .feature files as a "traditional looking" requirements specification.
+
+In environments with stakeholders or other interested parties (e.g. client auditors, FDA auditors) that prefer a
+traditional requirements specification, Featurist provides a means to generate that document from your Gherkin
+.feature files.
+
+== Current status
+
+Preliminary development / proof-of-concept underway...
+
+== Usage Instructions
+
+Featurist is currently not distributed as a gem, so you'll have to grab the code from github.
+
++featurist --help+ Is all the documentation there is right now besides the code itself.
 
 == Contributing to featurist
  
