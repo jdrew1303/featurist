@@ -10,7 +10,7 @@ require 'prawn'
 # Nodes are sorted by ID, then alphabetically
 
 class SpecSection
-  attr_reader :id
+  attr_reader :id, :sub_sections
   attr_accessor :title, :narrative
 
   #todo optional id & narrative, mandatory title
@@ -29,7 +29,7 @@ class SpecSection
     @sub_sections[child.id] = child
   end
 
-  def sub_sections
+  def ordered_sections
     ordered_sections = []
     @sub_sections.keys.sort.each { |key| ordered_sections << sub_sections[key] }
   end
@@ -38,26 +38,28 @@ end
 # TODO: redo Specification so it has a root SpecSection node
 # and the current @contents becomes @root_node.sub_sections???
 class Specification
+  attr_accessor :root
+
   def initialize
-    @contents = {}
+    @root = SpecSection.new 0, "Root", "Root" # magic root node -- constant?
   end
 
   def add_or_update_section section
-    if @contents.has_key? section.id
+    if @root.sub_sections.has_key? section.id
       # update the title, narrative -- leave children intact
-      @contents[section.id].title = section.title
-      @contents[section.id].narrative = section.narrative
+      @root.sub_sections[section.id].title = section.title
+      @root.sub_sections[section.id].narrative = section.narrative
     else
-      @contents[section.id] = section
+      @root.sub_sections[section.id] = section
     end
   end
 
   def print
     Prawn::Document.generate('spec.pdf') do |pdf|
       # put the top level contents in order by key
-      ordered = []
-      @contents.keys.sort.each { |key| ordered << @contents[key] }
-      print_section ordered, pdf
+      #ordered = []
+      #@root.ordered_sections.keys.sort.each { |key| ordered << @contents[key] }
+      print_section @root.ordered_sections, pdf
       end
     end
   end
@@ -73,6 +75,5 @@ class Specification
         print_section r.sub_sections, pdf
       end
   end
-
 end
 

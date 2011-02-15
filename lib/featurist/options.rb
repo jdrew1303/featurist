@@ -11,7 +11,7 @@ class Options
       opt :verbose, "Output detailed diagnostics"
     end
 
-    @dir = opts[:dir].gsub('\\', '/') #turn those backslashes to forward slashes so paths work in Dir[...]
+    @dir = opts[:dir].nil? ? '.' : opts[:dir].gsub('\\', '/') #turn those backslashes to forward slashes so paths work in Dir[...]
     @out = opts[:output]
     @verbose = opts[:verbose]
     @format = opts[:format]
@@ -23,8 +23,8 @@ class Options
 
   def welcome
     puts %{
-FEATURE PUBLISHER v0.0.1, February 2011, Jon Archer
-https://github.com/jonarcher/feature-publisher
+FEATURIST v0.0.1, February 2011, Jon Archer
+https://github.com/jonarcher/featurist
 
 email jon at rollinsville dot org
 twitter @9200feet
@@ -33,6 +33,6 @@ twitter @9200feet
 Turn a directory full of Gherkin features into a simple
 requirements specification.
     }
-    puts "Try fp --help" if ARGV.empty?
+    puts "Try featurist --help" if ARGV.empty?
   end
 end
