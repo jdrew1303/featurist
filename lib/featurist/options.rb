@@ -1,4 +1,4 @@
-require_relative 'trollop'
+require 'trollop'
 
 class Options
   attr_reader :dir, :out, :verbose

@@ -1,5 +1,8 @@
-require_relative 'featurist/options'
-require_relative 'featurist/specification'
+
+require 'featurist/options'
+require 'featurist/specification'
+
+
 
 class Featurist
   def initialize
@@ -27,14 +30,16 @@ class Featurist
     # Another manual add at the end
     @spec.add_or_update_section SpecSection.new(1000, "Sign off", "Sign it in...PMED.")
 
-    @spec.print
+    @spec.diagnostics
+    #@spec.print_spec
   end
 
   def build_spec dir, section
     Dir[ dir + '/*' ].each do |entry|
       if File::directory?(entry)
         # we need a SpecSection here to represent this
-        sub_section = SpecSection.new entry, entry, entry # bad naming scheme...
+        sub_section = SpecSection.new section.max_section_id + 1, entry.rpartition(/\//).last, entry
+        section.add_subsection sub_section
         build_spec entry, sub_section
       elsif entry.end_with? '.feature'
         add_feature entry, section
@@ -44,7 +49,8 @@ class Featurist
 
   def add_feature feature_file, section
     File::open feature_file, 'r' do |feature|
-      feature_id = feature_title = feature_narrative = line = ""
+      feature_id = nil
+      feature_title = feature_narrative = line = ""
       begin
         next if line.length == 0
         next if line.include? '#' # skip over comments
@@ -58,13 +64,14 @@ class Featurist
           feature_narrative << line.lstrip
         end
       end while line = feature.gets
-      # arse...we can't always be adding to @spec because then everything will be at the root
-      # level. Instead we want to be adding to something like current_node
+      feature_id = section.max_section_id + 1 if feature_id.nil?
       section.add_subsection SpecSection.new( feature_id, feature_title, feature_narrative)
     end
   end
 
 end
+
+
 
 # TODO: Massive amounts of instrumentation!!!!!!!
 
