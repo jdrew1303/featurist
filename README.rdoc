@@ -1,4 +1,4 @@
-= featurist
+= Featurist
 
 Featurist generates a "traditional" requirements specification from a set of
 Gherkin features such as used with Cucumber or SpecFlow to describe required
@@ -15,8 +15,8 @@ want <feature> so that <value>" format sometimes employed.
 In addition to generating a requirements specification document, Featurist can
 also optionally two further outputs:
 
-  - a test script, based upon feature scenarios and step definition code
-  - a traceability matrix, linking requirments to tests
+* a test script, based upon feature scenarios and step definition code
+* a traceability matrix, mapping requirments to tests
 
 Such artifacts may again prove useful in environments with deeply entrenched
 expectations on what documentation deliverables constitute best practice.
