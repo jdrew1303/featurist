@@ -1,13 +1,14 @@
 require 'prawn'
 
 class SpecSection
-  attr_reader :req_id, :sub_sections
+  attr_reader :req_id, :sub_sections, :parent_section
   attr_accessor :title, :narrative
 
-  def initialize req_id, title, narrative
+  def initialize req_id, title, narrative, parent_section
     @req_id = req_id
     @title = title
     @narrative = narrative
+    @parent_section = parent_section
     @sub_sections = {}
   end
 
@@ -24,11 +25,17 @@ class SpecSection
   end
 
   def max_section_id
-    if ordered_sections.size == 0
-      0
-    else
-      ordered_sections.last.req_id      
-    end
+    ordered_sections.size
+  end
+
+  def fully_qualified_id
+    fqid = @req_id.to_s
+    parent = @parent_section
+    begin
+      fqid = parent.req_id.to_s + '.' + fqid unless parent.req_id == 0
+      parent = parent.parent_section
+    end while not parent.nil?
+    fqid
   end
 end
 
@@ -36,7 +43,7 @@ class Specification
   attr_accessor :root
 
   def initialize
-    @root = SpecSection.new 0, "Root", "Root" # magic root node -- constant?
+    @root = SpecSection.new 0, "Root", "Root", nil # magic root node -- constant?
   end
 
   def add_or_update_section section
@@ -55,7 +62,9 @@ class Specification
 
   def unwrap node, indent
     indent.times { print "  " }
-    puts "#{node.req_id}.  #{node.title}" unless indent == 0 #ignore root
+#    puts "#{node.req_id}.  #{node.title}" unless indent == 0 #ignore root
+    puts "#{node.fully_qualified_id}.  #{node.title}" unless indent == 0 #ignore root
+
     node.ordered_sections.each do |sub_node|
       unwrap sub_node, indent + 1
     end
