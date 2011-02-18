@@ -29,7 +29,9 @@ Preliminary development / proof-of-concept underway...
 
 Featurist is currently not distributed as a gem, so you'll have to grab the code from github.
 
-+featurist --help+ Is all the documentation there is right now besides the code itself.
+  - featurist --help
+
+That's about all the documentation there is right now besides the code itself.
 
 == Contributing to featurist
  
