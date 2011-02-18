@@ -1,7 +1,7 @@
 require 'prawn'
 
-module Featurist
-  class SpecSection
+module Specification
+  class Section
     attr_reader :req_id, :sub_sections, :parent_section
     attr_accessor :title, :narrative
 
@@ -40,11 +40,11 @@ module Featurist
     end
   end
 
-  class Specification
+  class Document
     attr_accessor :root
 
     def initialize
-      @root = SpecSection.new 0, "Root", "Root", nil # magic root node -- constant?
+      @root = Section.new 0, "Root", "Root", nil # magic root node -- constant?
     end
 
     def add_or_update_section section
@@ -103,7 +103,7 @@ module Featurist
     Dir[ dir + '/*' ].each do |entry|
       if File::directory?(entry)
         # we need a SpecSection here to represent this
-        sub_section = SpecSection.new section.max_section_id + 1, entry.rpartition(/\//).last, entry, section
+        sub_section = Section.new section.max_section_id + 1, entry.rpartition(/\//).last, entry, section
         section.add_subsection sub_section
         build_spec entry, sub_section
       elsif entry.end_with? '.feature'
@@ -130,7 +130,7 @@ module Featurist
         end
       end while line = feature.gets
       feature_id = section.max_section_id + 1 if feature_id.nil?
-      section.add_subsection SpecSection.new( feature_id, feature_title, feature_narrative, section)
+      section.add_subsection Section.new( feature_id, feature_title, feature_narrative, section)
     end
   end
 
