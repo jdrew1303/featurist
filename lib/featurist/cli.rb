@@ -7,22 +7,10 @@ class CLI
       if args.size == 0
         args << "--help"
       end
-      new(args).execute!
+      new.execute!
     end
   end
 
-  def initialize args
-    @options = Options.new
-  end
-
-  def execute!
-    f = Featurist.new @options
-    f.run
-  end
-end
-
-class Options
-  attr_reader :dir, :out, :verbose
   def initialize
     opts = Trollop::options do
       version       "Feature Publisher v0.1.0, February 2011, Jon Archer"
@@ -40,13 +28,28 @@ requirements specification.
       opt :format,  "Output format: txt | pdf", :default => "pdf"
     end
 
-    @dir = opts[:dir].nil? ? '.' : opts[:dir].gsub('\\', '/') #turn those backslashes to forward slashes so paths work in Dir[...]
-    @out = opts[:output]
-    @verbose = opts[:verbose]
-    @format = opts[:format]
+#    dir = opts[:dir].nil? ? '.' : opts[:dir].gsub('\\', '/')
+#    output = opts[:output]
+#    format = opts[:format]
 
     # parameter verification
     Trollop::die :dir, "Cannot find #{@dir}" unless File.directory?(@dir)
     Trollop::die :format, "Must be either 'txt' or 'pdf'" unless @format.match /^(txt|pdf)$/
+
+    @config        = Featurist::Config.new
+    @config.dir    = opts[:dir].nil? ? '.' : opts[:dir].gsub('\\', '/') #turn backslashes in Windows paths to forward slashes so paths work in Dir[...]
+    @config.output = opts[:output]
+    @config.format = opts[:format]
+  end
+
+  def execute!
+    f = Featurist.new @config
+    f.run
+  end
+end
+
+class Featurist
+  class Config
+    attr_accessor :dir, :output, :format
   end
 end

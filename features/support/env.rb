@@ -9,5 +9,4 @@ end
 
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../lib')
 require 'featurist'
-
 require 'rspec/expectations'
