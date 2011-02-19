@@ -33,8 +33,8 @@ requirements specification.
 #    format = opts[:format]
 
     # parameter verification
-    Trollop::die :dir, "Cannot find #{@dir}" unless File.directory?(@dir)
-    Trollop::die :format, "Must be either 'txt' or 'pdf'" unless @format.match /^(txt|pdf)$/
+    Trollop::die :dir, "Cannot find #{opts[:dir]}" unless File.directory?(opts[:dir])
+    Trollop::die :format, "Must be either 'txt' or 'pdf'" unless opts[:format].match /^(txt|pdf)$/
 
     @config        = Featurist::Config.new
     @config.dir    = opts[:dir].nil? ? '.' : opts[:dir].gsub('\\', '/') #turn backslashes in Windows paths to forward slashes so paths work in Dir[...]

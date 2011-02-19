@@ -1,8 +1,9 @@
 require 'featurist/specification'
+require 'featurist/text_formatter'
+
 include Specification # Bring in build_spec module method TODO: figure out proper organization/naming/means to include stuff
 
 class Featurist
-
   def initialize options
     @options = options
   end
@@ -24,13 +25,9 @@ class Featurist
     spec.add_or_update_section Specification::Section.new 100, "Sign off", "Sign it in...PMED.", spec.root
 
     # Output our spec
-    spec.diagnostics
-    #@spec.print_spec
+    formatter = TextFormatter.new @options.output, spec
+    formatter.run
+
   end
+
 end
-
-
-
-
-
-

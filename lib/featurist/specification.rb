@@ -57,19 +57,18 @@ module Specification
       end
     end
 
-    def diagnostics
-      unwrap @root, 0
-    end
-
-    def unwrap node, indent
-      indent.times { print "  " }
-  #    puts "#{node.req_id}.  #{node.title}" unless indent == 0 #ignore root
-      puts "#{node.fully_qualified_id}.  #{node.title}" unless indent == 0 #ignore root
-
-      node.ordered_sections.each do |sub_node|
-        unwrap sub_node, indent + 1
-      end
-    end
+#    def diagnostics
+#      unwrap @root, 0
+#    end
+#
+#    def unwrap node, indent
+#      indent.times { print "  " }
+#      puts "#{node.fully_qualified_id}.  #{node.title}" unless indent == 0 #ignore root
+#
+#      node.ordered_sections.each do |sub_node|
+#        unwrap sub_node, indent + 1
+#      end
+#    end
 
     def print_spec
       Prawn::Document.generate('spec.pdf') do |pdf|
@@ -102,7 +101,7 @@ module Specification
   def build_spec dir, section
     Dir[ dir + '/*' ].each do |entry|
       if File::directory?(entry)
-        # we need a SpecSection here to represent this
+        # TODO: Some directories we want to ignore, e.g. step_definitions & support in Cucumber for starters
         sub_section = Section.new section.max_section_id + 1, entry.rpartition(/\//).last, entry, section
         section.add_subsection sub_section
         build_spec entry, sub_section
@@ -126,7 +125,7 @@ module Specification
         elsif line.include? 'Feature:'
           feature_title = line.gsub('Feature:', '').lstrip
         else
-          feature_narrative << line.lstrip
+          feature_narrative << line.lstrip.chomp
         end
       end while line = feature.gets
       feature_id = section.max_section_id + 1 if feature_id.nil?
