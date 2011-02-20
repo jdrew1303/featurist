@@ -1,5 +1,44 @@
+#
+# FEATURIST configuration file
+#
+
+# Do *NOT* alter the line below
 --- !ruby/object:Featurist::Config
+
+#
+# Cover page
+#
+cover_page: true
+cover_page_project_name: Featurist
+cover_page_narrative: ""
+
+
+#
+# Ignore specified directories when processing features
+#
 ignore_directories: 
 - step_definitions
 - support
+
+#
+# Besides ignoring them, you can configure directories under your features
+# location to have sensible names, their own narrative text and dictate
+# what order they should be presented in.
+#
 directory_config:
+
+#
+# Specify each directory as shown below:
+#
+#  <directory_name>
+#    order: <integer>
+#    title: <string>
+#    narrative: <string>
+#
+# For example, for a section contained in a 'master_bedroom' directory that
+# you want to make the first section of your specification:
+#
+#  master_bedroom:
+#    order: 1
+#    title: Master Bedroom
+#    narrative: "The master bedroom is a showcase of exotic yet muted tastes."

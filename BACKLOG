@@ -1,6 +1,7 @@
 
 FEATURIST Backlog
 -----------------
+- Sorting/resorting of sections based on order specified in featurist-config.yml
 - specify cover page somehow
 - specify TOC generation
 - reliably strip out @tags from top of feature description
