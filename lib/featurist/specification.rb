@@ -58,19 +58,6 @@ module Specification
       end
     end
 
-#    def diagnostics
-#      unwrap @root, 0
-#    end
-#
-#    def unwrap node, indent
-#      indent.times { print "  " }
-#      puts "#{node.fully_qualified_id}.  #{node.title}" unless indent == 0 #ignore root
-#
-#      node.ordered_sections.each do |sub_node|
-#        unwrap sub_node, indent + 1
-#      end
-#    end
-
     def print_spec
       Prawn::Document.generate('spec.pdf') do |pdf|
         # put the top level contents in order by key

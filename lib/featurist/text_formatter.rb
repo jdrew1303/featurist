@@ -12,8 +12,10 @@ class TextFormatter
 
   def run
     # open the file
-    unwrap @spec.root
-    # close the file
+    File::open @output_filename, 'w' do |file|
+      @output_file = file
+      unwrap @spec.root
+    end
   end
 
   def unwrap section
@@ -27,14 +29,14 @@ class TextFormatter
 
   def render node
     return if @level == 0
-    @level.times { print "  " }
-    puts "#{node.fully_qualified_id}.  #{node.title}" unless @level == 0 #ignore root
-
+    @level.times { @output_file << "  " }
+    @output_file << "#{node.fully_qualified_id}.  #{node.title}" unless @level == 0 #ignore root
+    @output_file << "\n" unless node.title.match /\n$/ #sometimes we need to force a newline after title
     @formatter.left_margin = ( @level * 2 ) + node.fully_qualified_id.size + 3
     @formatter.text = node.narrative
 
-    puts @formatter.paragraphs
+    @output_file << @formatter.paragraphs
 
-    puts "\n\n" # TODO: configurable section separator???
+    @output_file << "\n\n" # TODO: configurable section separator???
   end
 end

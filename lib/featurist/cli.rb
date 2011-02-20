@@ -24,8 +24,8 @@ requirements specification.
 \t
       EOS
       opt :dir,     "Directory containing .feature files to process", :type => :string
-      opt :output,  "Output filename", :default => "spec.pdf"
-      opt :format,  "Output format: txt | pdf", :default => "pdf"
+      opt :output,  "Output filename", :default => "spec.txt"
+      opt :format,  "Output format: txt | pdf", :default => "txt"
     end
 
     # parameter verification
