@@ -19,12 +19,25 @@ class Featurist
     build_spec @options.dir, spec.root
 
     # Output our spec
-    puts "Generating #{@options.output}"
-
     if @options.format == "txt"
-      TextFormatter.new(@options.output, spec).run
+      output_filename = @options.file_prefix + 'spec.txt'
+      TextFormatter.new(output_filename, spec).run
+      puts "Generating #{output_filename}"
+
     elsif @options.format == "pdf"
-      PDFFormatter.new(@options.output, spec).run
+      output_filename = @options.file_prefix + 'spec.pdf'
+      PDFFormatter.new(output_filename, spec).run
+      puts "Generating requirements specification #{output_filename}"
+    end
+
+    if @options.test_script?
+      puts "\nGenerating test script #{@options.file_prefix}test-script.#{@options.format}"
+      # TODO
+    end
+
+    if @options.trace_matrix?
+      puts "\nGenerating trace matrix #{@options.file_prefix}trace-matrix.#{@options.format}"
+      # TODO
     end
 
     puts "Finished."
