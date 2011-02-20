@@ -28,15 +28,11 @@ requirements specification.
       opt :format,  "Output format: txt | pdf", :default => "pdf"
     end
 
-#    dir = opts[:dir].nil? ? '.' : opts[:dir].gsub('\\', '/')
-#    output = opts[:output]
-#    format = opts[:format]
-
     # parameter verification
     Trollop::die :dir, "Cannot find #{opts[:dir]}" unless File.directory?(opts[:dir])
     Trollop::die :format, "Must be either 'txt' or 'pdf'" unless opts[:format].match /^(txt|pdf)$/
 
-    @config        = Featurist::Config.new
+    @config        = Featurist::Options.new
     @config.dir    = opts[:dir].nil? ? '.' : opts[:dir].gsub('\\', '/') #turn backslashes in Windows paths to forward slashes so paths work in Dir[...]
     @config.output = opts[:output]
     @config.format = opts[:format]
@@ -49,7 +45,7 @@ requirements specification.
 end
 
 class Featurist
-  class Config
+  class Options
     attr_accessor :dir, :output, :format
   end
 end

@@ -1,4 +1,5 @@
 require 'prawn'
+require 'featurist/config'
 
 module Specification
   class Section
@@ -101,10 +102,12 @@ module Specification
   def build_spec dir, section
     Dir[ dir + '/*' ].each do |entry|
       if File::directory?(entry)
-        # TODO: Some directories we want to ignore, e.g. step_definitions & support in Cucumber for starters
-        sub_section = Section.new section.max_section_id + 1, entry.rpartition(/\//).last, entry, section
-        section.add_subsection sub_section
-        build_spec entry, sub_section
+        # only do anything with this directory if it's *not* on the configured ignore list
+        if not Featurist::Config.config.ignore_directories.include? entry.rpartition(/\//).last
+          sub_section = Section.new section.max_section_id + 1, entry.rpartition(/\//).last, entry, section
+          section.add_subsection sub_section
+          build_spec entry, sub_section
+        end
       elsif entry.end_with? '.feature'
         add_feature entry, section
       end
@@ -116,16 +119,20 @@ module Specification
       feature_id = nil
       feature_title = feature_narrative = line = ""
       begin
-        next if line.length == 0
+
         break if line.match 'Scenario|Background' # Scenario, Scenario Outline or Background = we're done
         line.gsub!("\xEF\xBB\xBF", '') #strip off the stupid BOM-UTF8 marker that VS (sometimes) seems to slip in
+        next if line.length == 0
         line = line.split('#')[0] # chop off comments
         if line.include? '@id'
           feature_id = line.slice(/@id_\d+/).slice(/\d+/).to_i
         elsif line.include? 'Feature:'
           feature_title = line.gsub('Feature:', '').lstrip
         else
-          feature_narrative << line.lstrip.chomp
+          # TODO: if we chomp here we lose blank lines in feature text :(
+          # Seems to be a harder problem than it looks at first.
+          # Should I be reading the .feature files using the Gherkin parser rather than kludging it like this?
+          feature_narrative << line #.lstrip
         end
       end while line = feature.gets
       feature_id = section.max_section_id + 1 if feature_id.nil?

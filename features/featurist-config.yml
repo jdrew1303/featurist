@@ -1,0 +1,5 @@
+--- !ruby/object:Featurist::Config
+ignore_directories: 
+- step_definitions
+- support
+section_config: 

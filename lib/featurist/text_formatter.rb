@@ -1,9 +1,13 @@
+require 'text/format'
+
 class TextFormatter
   def initialize output_filename, spec
     @output_filename = output_filename
     @spec = spec
     @level = 0
-    @line_length = 60
+    @formatter = Text::Format.new
+    @formatter.columns = 60
+    @formatter.first_indent = 0
   end
 
   def run
@@ -26,16 +30,11 @@ class TextFormatter
     @level.times { print "  " }
     puts "#{node.fully_qualified_id}.  #{node.title}" unless @level == 0 #ignore root
 
-    # TODO: detect and fix words split across lines
-    # TODO: also detect when end of one sentence runs into beginning of another
+    @formatter.left_margin = ( @level * 2 ) + node.fully_qualified_id.size + 3
+    @formatter.text = node.narrative
 
-    lines = node.narrative.scan /.{1,#{@line_length}}/
-    lines.each do |line|
-      @level.times { print "  " }
-      narrative_indent = node.fully_qualified_id.size + 3
-      narrative_indent.times { print " " }
-      puts line
-    end
-    puts "\n" # TODO: configurable section separator???
+    puts @formatter.paragraphs
+
+    puts "\n\n" # TODO: configurable section separator???
   end
 end

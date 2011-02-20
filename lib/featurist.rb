@@ -1,11 +1,13 @@
 require 'featurist/specification'
 require 'featurist/text_formatter'
+require 'featurist/config'
 
 include Specification # Bring in build_spec module method TODO: figure out proper organization/naming/means to include stuff
 
 class Featurist
   def initialize options
     @options = options
+    Featurist::Config.load @options.dir
   end
 
   def run
@@ -18,7 +20,7 @@ class Featurist
     # Dynamically generated stuff from "/Features"
     build_spec @options.dir, spec.root
 
-    # Process the featurist.config
+    # Process the featurist config
     # TODO: see above :)
 
     # Another manual add at the end
