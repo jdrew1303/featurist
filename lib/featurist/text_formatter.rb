@@ -18,6 +18,7 @@ class TextFormatter
     end
   end
 
+private
   def unwrap section
     render section
     section.ordered_sections.each do |sub_node|

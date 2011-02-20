@@ -1,4 +1,3 @@
-require 'prawn'
 require 'featurist/config'
 
 module Specification
@@ -41,6 +40,7 @@ module Specification
     end
   end
 
+  # TODO: does this Document class serve *any* purpose any longer?
   class Document
     attr_accessor :root
 
@@ -55,28 +55,6 @@ module Specification
         @root.sub_sections[section.req_id].narrative = section.narrative
       else
         @root.sub_sections[section.req_id] = section
-      end
-    end
-
-    def print_spec
-      Prawn::Document.generate('spec.pdf') do |pdf|
-        # put the top level contents in order by key
-        #ordered = []
-        #@root.ordered_sections.keys.sort.each { |key| ordered << @contents[key] }
-        print_section @root.ordered_sections, pdf
-      end
-    end
-
-    def print_section section, pdf
-      section.each do |r|
-        #pdf.text '<b>' << r.id.to_s << '. ' << r.title << '</b>', :inline_format => true
-        #pdf.text r.narrative
-        pdf.text "\n" # should be able to configure feature separation behavior
-
-        # deal with the children
-        #if not r.sub_sections.nil?
-        #  print_section r.sub_sections, pdf
-        #end
       end
     end
   end
@@ -95,7 +73,7 @@ module Specification
 
           # if details are provided in the config.yml update this sub section
           if Featurist::Config.config.directory_config.has_key? sub_section.title
-            sub_section.narrative = Featurist::Config.config.directory_config[sub_section.title]["narrative"]            
+            sub_section.narrative = Featurist::Config.config.directory_config[sub_section.title]["narrative"]
             sub_section.title = Featurist::Config.config.directory_config[sub_section.title]["title"]
             # TODO: ordering
           end
@@ -114,7 +92,6 @@ module Specification
       feature_id = nil
       feature_title = feature_narrative = line = ""
       begin
-
         break if line.match 'Scenario|Background' # Scenario, Scenario Outline or Background = we're done
         line.gsub!("\xEF\xBB\xBF", '') #strip off the stupid BOM-UTF8 marker that VS (sometimes) seems to slip in
         next if line.length == 0
@@ -124,9 +101,6 @@ module Specification
         elsif line.include? 'Feature:'
           feature_title = line.gsub('Feature:', '').lstrip
         else
-          # TODO: if we chomp here we lose blank lines in feature text :(
-          # Seems to be a harder problem than it looks at first.
-          # Should I be reading the .feature files using the Gherkin parser rather than kludging it like this?
           feature_narrative << line #.lstrip
         end
       end while line = feature.gets

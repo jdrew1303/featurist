@@ -1,5 +1,6 @@
 require 'featurist/specification'
 require 'featurist/text_formatter'
+require 'featurist/pdf_formatter'
 require 'featurist/config'
 
 include Specification # Bring in build_spec module method TODO: figure out proper organization/naming/means to include stuff
@@ -18,9 +19,12 @@ class Featurist
     build_spec @options.dir, spec.root
 
     # Output our spec
+    puts "Generating #{@options.output}"
+
     if @options.format == "txt"
-      puts "Generating #{@options.output}"
       TextFormatter.new(@options.output, spec).run
+    elsif @options.format == "pdf"
+      PDFFormatter.new(@options.output, spec).run
     end
 
     puts "Finished."
