@@ -2,4 +2,4 @@
 ignore_directories: 
 - step_definitions
 - support
-section_config: 
+directory_config:

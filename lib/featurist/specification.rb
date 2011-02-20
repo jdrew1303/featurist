@@ -105,6 +105,14 @@ module Specification
         # only do anything with this directory if it's *not* on the configured ignore list
         if not Featurist::Config.config.ignore_directories.include? entry.rpartition(/\//).last
           sub_section = Section.new section.max_section_id + 1, entry.rpartition(/\//).last, entry, section
+
+          # if details are provided in the config.yml update this sub section
+          if Featurist::Config.config.directory_config.has_key? sub_section.title
+            sub_section.narrative = Featurist::Config.config.directory_config[sub_section.title]["narrative"]            
+            sub_section.title = Featurist::Config.config.directory_config[sub_section.title]["title"]
+            # TODO: ordering
+          end
+
           section.add_subsection sub_section
           build_spec entry, sub_section
         end

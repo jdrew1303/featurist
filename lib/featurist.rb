@@ -21,7 +21,7 @@ class Featurist
     build_spec @options.dir, spec.root
 
     # Process the featurist config
-    # TODO: see above :)
+    p Featurist::Config.config.directory_config
 
     # Another manual add at the end
     spec.add_or_update_section Specification::Section.new 100, "Sign off", "Sign it in...PMED.", spec.root

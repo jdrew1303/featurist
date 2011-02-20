@@ -3,7 +3,7 @@ require 'yaml'
 class Featurist
 
   class Config
-    attr_reader :ignore_directories, :section_config
+    attr_reader :ignore_directories, :directory_config
 
     def initialize
       @ignore_directories = []
