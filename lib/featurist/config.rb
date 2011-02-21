@@ -24,6 +24,8 @@ class Featurist
           YAML.load(File.open("#{dir}/featurist-config.yml"))
         rescue ArgumentError => e
           puts "Could not parse YAML: #{e.message}"
+        rescue Exception => e
+          puts "Could not load Featurist config #{dir}/featurist-config.yml. Exception #{e.message}"
         end    
       end
     end
