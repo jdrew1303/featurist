@@ -2,12 +2,11 @@
 FEATURIST Backlog
 -----------------
 - Sorting/resorting of sections based on order specified in featurist-config.yml
-- specify cover page somehow
 - specify TOC generation
-- reliably strip out @tags from top of feature description
-  (need to not accidentally remove feature description text with legimate @'s in)
 - Nice PDF formatting, indenting of sections in particular
-- Page numbers on PDF version
+- PDF format -- how to do headers and footers. Image/logo in header?
+- PDF format -- depending on formatting in .feature files can get some weird line wraps. What to do...
+  (Warn on processing .feature files with line length > x?? but proportional fonts make it hard to pick sensible x value)
 - Test script document generation
 - Trace matrix document generation
 - Test as a gem, esp. the /bin stuff -- is that right? Work on Windows and *nix?
@@ -16,3 +15,10 @@ FEATURIST Backlog
   as a paragraph. the .center method (oddly) is closer but indentation is FUBAR.
   Can this be improved? Text spec output not likely the main format...
 - HTML format output?
+
+DONE
+----
+- reliably strip out @tags from top of feature description
+  (need to not accidentally remove feature description text with legimate @'s in)
+- specify cover page somehow
+- Page numbers on PDF version

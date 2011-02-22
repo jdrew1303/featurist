@@ -11,10 +11,6 @@ Feature: Requirements Specification
   consumers of more traditional documentation will recognize and be at ease with.
 
   Scenario: Simple requirements specification
-    Given the features in "./test_data"
-    When I run Featurist with the following additional arguments:
-      | argument | value                        |
-      | --format | txt                          |
-      | --output | ./generated-requirements.txt |
-
+    Given the features in "./features"
+    When I run Featurist
     Then I get the same results as in "./test_data/expected-requirements.txt"

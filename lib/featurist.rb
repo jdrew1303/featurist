@@ -8,19 +8,19 @@ include Specification # Bring in build_spec module method TODO: figure out prope
 class Featurist
   def initialize options
     @options = options
-    Featurist::Config.load @options.dir
+    Featurist::Config.load @options.features_dir
   end
 
   def run
     spec = Specification::Document.new
 
     # Dynamically generate stuff from "/Features"
-    puts "\nBuilding requirements specification from features in #{@options.dir}"
-    build_spec @options.dir, spec.root
+    puts "\nBuilding requirements specification from features in #{@options.features_dir}"
+    build_spec @options.features_dir, spec.root
 
     # Output our spec
     if @options.format == "txt"
-      output_filename = @options.file_prefix + 'spec.txt'
+      output_filename = @options.output_dir + '/' + @options.file_prefix + 'spec.txt'
       TextFormatter.new(output_filename, spec).run
       puts "Generating #{output_filename}"
 

@@ -1,4 +1,5 @@
 require 'text/format'
+require 'featurist/config'
 
 class TextFormatter
   def initialize output_filename, spec
@@ -14,6 +15,17 @@ class TextFormatter
     # open the file
     File::open @output_filename, 'w' do |file|
       @output_file = file
+
+      # Deal with cover page -- nasty POC hack
+      if Featurist::Config.config.cover_page
+        10.times { @output_file << "\n" }
+        @output_file << "     " + Featurist::Config.config.cover_page_project_name + "\n     "
+        Featurist::Config.config.cover_page_project_name.length.times { @output_file << "-" }
+        @output_file << "\n\n     "
+        @output_file << Featurist::Config.config.cover_page_narrative
+        10.times { @output_file << "\n" }
+      end
+
       unwrap @spec.root
     end
   end

@@ -1,20 +1,37 @@
 require 'prawn'
+require 'featurist/config'
 
 class PDFFormatter
   def initialize output_filename, spec
     @output_filename = output_filename
     @spec = spec
-    @level = 0    
+    @level = 0
+    @config = Featurist::Config.config
   end
 
   def run
-    Prawn::Document.generate(@output_filename) do |pdf|
-      @output_file = pdf
+    Prawn::Document.generate @output_filename, :info => {
+        :Title => "#{@config.cover_page_project_name} Requirements Specification",
+        :Author => "Jon Archer",
+    } do |pdf|
+      @pdf = pdf
+      cover_page if @config.cover_page
       unwrap @spec.root
+
+      #TODO has to be a better way to do this. More investigation of Prawn required...
+      @pdf.number_pages "CONFIDENTIAL INTERNAL DOCUMENT                    Page <page> of <total>", [@pdf.bounds.right - 500, 0]
     end
   end
 
   private
+    def cover_page
+      @pdf.move_down 100
+      @pdf.text @config.cover_page_project_name, :size => 24, :align => :center
+      @pdf.move_down 100
+      @pdf.text @config.cover_page_narrative
+      @pdf.start_new_page
+    end
+
     def unwrap section
       render section
       section.ordered_sections.each do |sub_node|
@@ -26,13 +43,13 @@ class PDFFormatter
 
     def render node
       return if @level == 0
-      #@level.times { @output_file "  " }
-      @output_file.text "#{node.fully_qualified_id}.  #{node.title}" unless @level == 0 #ignore root
-      @output_file.text "\n" unless node.title.match /\n$/ #sometimes we need to force a newline after title
+      #@level.times { @output_file "  " } @pdf.indent( x )
+      @pdf.text "#{node.fully_qualified_id}.  #{node.title}" unless @level == 0 #ignore root
+      @pdf.text "\n" unless node.title.match /\n$/ #sometimes we need to force a newline after title
 
-      @output_file.text node.narrative
+      @pdf.text node.narrative
 
-      @output_file.text "\n\n" # TODO: configurable section separator???
+      @pdf.text "\n\n" # TODO: configurable section separator???
     end
 
 end

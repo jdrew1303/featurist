@@ -89,6 +89,7 @@ module Specification
 
   def add_feature feature_file, section
     File::open feature_file, 'r' do |feature|
+      parsing_feature = false
       feature_id = nil
       feature_title = feature_narrative = line = ""
       begin
@@ -96,9 +97,11 @@ module Specification
         line.gsub!("\xEF\xBB\xBF", '') #strip off the stupid BOM-UTF8 marker that VS (sometimes) seems to slip in
         next if line.length == 0
         line = line.split('#')[0] # chop off comments
-        if line.include? '@id'
-          feature_id = line.slice(/@id_\d+/).slice(/\d+/).to_i
+        if line.include? '@'
+          next unless parsing_feature
+          feature_id = line.slice(/@id_\d+/).slice(/\d+/).to_i if line.include? '@id'
         elsif line.include? 'Feature:'
+          parsing_feature = true
           feature_title = line.gsub('Feature:', '').lstrip
         else
           feature_narrative << line #.lstrip
