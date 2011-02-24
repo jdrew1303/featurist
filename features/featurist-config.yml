@@ -21,15 +21,14 @@ toc: false
 #
 # Header
 #
-#header_logo_file: perceptive-logo.jpg
-#header_logo_alignment: right
-#header_text:
+header_text: <i>Featurist v0.1.0</i>
+header_logo: featurist.png
 
 #
 # Footer
 #
-#footer_page_number_format: Page <page> of <total>
-#footer_page_number_alignment: center
+footer_text: <b><i>(c) 2011, Jon Archer</i></b>
+footer_page_number_format: Page <page> of <total>
 
 #
 # PDF properties
@@ -54,7 +53,7 @@ directory_config:
 #
 # Specify each directory as shown below:
 #
-#  <directory_name>
+#  <directory_name:>
 #    order: <integer>
 #    title: <string>
 #    narrative: <string>

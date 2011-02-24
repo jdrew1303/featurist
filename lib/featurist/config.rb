@@ -8,7 +8,11 @@ class Featurist
                 :directory_config,
                 :cover_page,
                 :cover_page_project_name,
-                :cover_page_narrative
+                :cover_page_narrative,
+                :header_text,
+                :header_logo,
+                :footer_text,
+                :footer_page_number_format
 
     def initialize
       @ignore_directories = []
@@ -25,8 +29,10 @@ class Featurist
           YAML.load(File.open("#{dir}/#{DEFAULT_CONFIG_FILENAME}"))
         rescue ArgumentError => e
           puts "Could not parse YAML: #{e.message}"
+          exit 1
         rescue Exception => e
           puts "Could not load Featurist config #{dir}/#{DEFAULT_CONFIG_FILENAME}. Exception #{e.message}"
+          exit 2
         end    
       end
     end
