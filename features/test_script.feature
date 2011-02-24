@@ -5,11 +5,11 @@ Feature: Test Script
   In such an environment one would find manual test script documents that got approved toward the
   final stages of the project before being run in this "Controlled Test" stage.
 
-  However, when developing software using an agile approach, one usually employs automated tests and
-  the "test scripts" are programs rather than documents created in a word processor. When using a
-  BDD tool like Cucumber or SpecFlow it can be difficult to explain to people used to seeing test
-  script documents, and harder still to explain that code review of step definitions can effectively
-  correspond to script sign off.
+  However, when developing software using an agile approach, one usually employs automated tests
+  and the "test scripts" are programs rather than documents created in a word processor. When
+  using a BDD tool like Cucumber or SpecFlow it can be difficult to explain to people used to
+  seeing test script documents, and harder still to explain that code review of step definitions
+  can effectively correspond to script sign off.
 
   The test script feature of Featurist generates a test script document from the scenarios found
   in .feature files with an appendix containing the step definition code. This document can be

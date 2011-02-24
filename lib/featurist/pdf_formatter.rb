@@ -10,26 +10,56 @@ class PDFFormatter
   end
 
   def run
-    Prawn::Document.generate @output_filename, :info => {
-        :Title => "#{@config.cover_page_project_name} Requirements Specification",
-        :Author => "Jon Archer",
-    } do |pdf|
-      @pdf = pdf
-      cover_page if @config.cover_page
-      unwrap @spec.root
+#    Prawn::Document.generate @output_filename, :info => {
+#        :Title => "#{@config.cover_page_project_name} Requirements Specification",
+#        :Author => "Jon Archer"
+#    } do |pdf|
 
-      #TODO has to be a better way to do this. More investigation of Prawn required...
-      @pdf.number_pages "CONFIDENTIAL INTERNAL DOCUMENT                    Page <page> of <total>", [@pdf.bounds.right - 500, 0]
+    Prawn::Document.generate @output_filename, :top_margin => 50 do |pdf|
+      @pdf = pdf
+
+      cover_page if @config.cover_page
+#      @pdf.move_down 30
+      @pdf.repeat(lambda { |p| p > 1}) do
+        # header
+        @pdf.bounding_box [@pdf.bounds.left, @pdf.bounds.top], :width  => @pdf.bounds.width do
+          @pdf.text '<i>' << @config.cover_page_project_name << '</i>', :align => :left, :size => 10, :inline_format => true
+          # TODO: get logo as specified in config logo = "#{Dir.getwd}/perceptive-logo-274x65.jpg"
+          # @pdf.image logo, :width => 137,:height => 32, :at => [@pdf.bounds.right - 140, 33]
+          @pdf.stroke_horizontal_rule
+          @pdf.move_down 20
+        end
+
+        #footer
+        @pdf.bounding_box [@pdf.bounds.left, @pdf.bounds.bottom + 25], :width => @pdf.bounds.width do
+          @pdf.stroke_horizontal_rule
+          @pdf.move_down 10
+          @pdf.text "<b><i>CONFIDENTIAL INTERNAL DOCUMENT</i></b>", :align => :left, :inline_format => true
+        end
+      end
+
+
+      @pdf.bounding_box([@pdf.bounds.left, @pdf.bounds.top - 50], :width  => @pdf.bounds.width, :height => @pdf.bounds.height - 100) do
+        unwrap @spec.root        
+      end
+
+
+      @pdf.number_pages "Page <page> of <total>", [@pdf.bounds.right - 100, 8]
     end
   end
 
   private
     def cover_page
       @pdf.move_down 100
-      @pdf.text @config.cover_page_project_name, :size => 24, :align => :center
+      @pdf.text '<b><i>' << @config.cover_page_project_name << '</i></b>', :size => 24, :align => :right, :inline_format => true
+      @pdf.stroke_horizontal_rule
       @pdf.move_down 100
-      @pdf.text @config.cover_page_narrative
-      @pdf.start_new_page
+      @pdf.indent 50 do
+        @pdf.text @config.cover_page_narrative, :inline_format => true
+        @pdf.move_down 40
+        @pdf.text "<b>Generated on:</b> #{Time.new.strftime('%d, %b %Y')}", :inline_format => true
+      end
+      @pdf.start_new_page :top_margin => 50
     end
 
     def unwrap section
@@ -44,7 +74,7 @@ class PDFFormatter
     def render node
       return if @level == 0
       #@level.times { @output_file "  " } @pdf.indent( x )
-      @pdf.text "#{node.fully_qualified_id}.  #{node.title}" unless @level == 0 #ignore root
+      @pdf.text "<b><u>#{node.fully_qualified_id}.  #{node.title}</u></b>", :inline_format => true unless @level == 0 #ignore root
       @pdf.text "\n" unless node.title.match /\n$/ #sometimes we need to force a newline after title
 
       @pdf.text node.narrative

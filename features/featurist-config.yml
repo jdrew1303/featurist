@@ -9,9 +9,33 @@
 # Cover page
 #
 cover_page: true
-cover_page_project_name: FEATURIST
+cover_page_project_name: FEATURIST v0.1.0
 cover_page_narrative: "FEATURIST v0.1.0 (c) 2011, Jon Archer.\n\n     Requirements Specification Document"
+#cover_page_narrative_file: narrative.html
 
+#
+# TOC required?
+#
+toc: false
+
+#
+# Header
+#
+#header_logo_file: perceptive-logo.jpg
+#header_logo_alignment: right
+#header_text:
+
+#
+# Footer
+#
+#footer_page_number_format: Page <page> of <total>
+#footer_page_number_alignment: center
+
+#
+# PDF properties
+#
+#pdf_title:
+#pdf_author:
 
 #
 # Ignore specified directories when processing features
