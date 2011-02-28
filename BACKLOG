@@ -2,9 +2,7 @@
 FEATURIST Backlog
 -----------------
 - Sorting/resorting of sections based on order specified in featurist-config.yml
-- specify TOC generation
-- Nice PDF formatting, indenting of sections in particular
-- PDF format -- how to do headers and footers. Image/logo in header?
+- specify TOC generation (how to get the right page numbers per section/feature?)
 - PDF format -- depending on formatting in .feature files can get some weird line wraps. What to do...
   (Warn on processing .feature files with line length > x?? but proportional fonts make it hard to pick sensible x value)
 - Test script document generation
@@ -22,3 +20,5 @@ DONE
   (need to not accidentally remove feature description text with legimate @'s in)
 - specify cover page somehow
 - Page numbers on PDF version
+- Nice PDF formatting, indenting of sections in particular
+- PDF format -- how to do headers and footers. Image/logo in header?
