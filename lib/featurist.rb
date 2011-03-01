@@ -1,6 +1,6 @@
-require 'featurist/specification'
-require 'featurist/text_formatter'
-require 'featurist/pdf_formatter'
+require 'featurist/rs/specification'
+require 'featurist/rs/text_formatter'
+require 'featurist/rs/pdf_formatter'
 require 'featurist/config'
 
 include Specification # Bring in build_spec module method TODO: figure out proper organization/naming/means to include stuff
