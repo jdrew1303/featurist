@@ -13,6 +13,7 @@ FEATURIST Backlog
   as a paragraph. the .center method (oddly) is closer but indentation is FUBAR.
   Can this be improved? Text spec output not likely the main format...
 - HTML format output?
+- Use Gherkin lexer/parser rather than my botched stuff.
 
 DONE
 ----
