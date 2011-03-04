@@ -1,6 +1,7 @@
 require 'featurist/rs/specification'
 require 'featurist/rs/text_formatter'
 require 'featurist/rs/pdf_formatter'
+require 'featurist/ts/test_script'
 require 'featurist/config'
 
 include Specification # Bring in build_spec module method TODO: figure out proper organization/naming/means to include stuff
@@ -26,13 +27,17 @@ class Featurist
 
     elsif @options.format == "pdf"
       output_filename = @options.file_prefix + 'spec.pdf'
-      PDFFormatter.new(output_filename, spec).run
+      Specification::PDFFormatter.new(output_filename, spec).run
       puts "Generating requirements specification #{output_filename}"
     end
 
     if @options.test_script?
       puts "\nGenerating test script #{@options.file_prefix}test-script.#{@options.format}"
-      # TODO
+
+      test_script = TestScript::Document.new
+      test_script.build @options.features_dir, test_script.root
+
+      TestScript::PDFFormatter.new("filename", test_script)
     end
 
     if @options.trace_matrix?
