@@ -1,12 +1,12 @@
 
 module TestScript
-  class Feature
-    attr_reader :req_id, :title, :narrative, :sub_sections, :parent_section
-
-    def add_subsection child
-      @sub_sections[child.req_id] = child
-    end
-  end
+#  class Feature
+#    attr_reader :req_id, :title, :narrative, :sub_sections, :parent_section
+#
+#    def add_subsection child
+#      @sub_sections[child.req_id] = child
+#    end
+#  end
 
   class Section
     attr_reader :section_id, :sub_sections, :parent_section
@@ -48,9 +48,6 @@ module TestScript
   end
 
   class TestCase < Section
-  end
-
-  class Feature < Section
   end
 
   class StepDefinition

@@ -21,7 +21,7 @@ end
 class Featurist
   class Options
 
-    attr_reader :features_dir, :output_dir, :file_prefix, :format
+    attr_reader :features_dir, :output_dir, :file_prefix, :output_format
 
     def initialize
       opts = Trollop::options do
@@ -30,9 +30,9 @@ class Featurist
   FEATURIST (c) 2011, Jon Archer
   https://github.com/jonarcher/featurist
   -------------------------------------------------------
-  Turn a directory full of Gherkin features into a simple
-  requirements specification and (optionally) generate
-  test script and trace matrix documents.
+  Turn a directory full of Gherkin features into documents
+  including requirements specification, test script and
+  trace matrix.
 
   See https://github.com/jonarcher/featurist for
   background information and important additional
@@ -42,21 +42,28 @@ EOS
         opt :features_dir,  "Directory containing .feature files to process", :default => ".",          :short => "d"
         opt :output_dir,    "Directory to write output to",                   :default => ".",          :short => "o"
         opt :file_prefix,   "Output filename prefix",                         :default => "featurist-", :short => "p"
-        opt :format,        "Output format: txt | pdf",                       :default => "txt",        :short => "f"
-        opt :test_script,   "Also output test script?",                       :default => false,        :short => "s"
-        opt :trace_matrix,  "Also output a trace matrix?",                    :default => false,        :short => "m"
+        opt :output_format, "Output format: txt | pdf",                       :default => "pdf",        :short => "f"
+        opt :requirements,  "Generate requirements specification",            :default => false,        :short => "r"
+        opt :test_script,   "Generate test script",                           :default => false,        :short => "s"
+        opt :trace_matrix,  "Generate trace matrix",                          :default => false,        :short => "m"
       end
 
       # parameter verification
       Trollop::die :features_dir, "Cannot find #{opts[:features_dir]}" unless File.directory?(opts[:features_dir])
-      Trollop::die :format, "Must be either 'txt' or 'pdf'" unless opts[:format].match /^(txt|pdf)$/
+      Trollop::die :output_format, "Must be either 'txt' or 'pdf'" unless opts[:output_format].match /^(txt|pdf)$/
+      Trollop::die "Select at least one document (requirements specification, test script or trace matrix) to generate" unless opts[:requirements] || opts[:test_script] || opts[:trace_matrix]
 
-      @features_dir  = opts[:features_dir].nil? ? '.' : opts[:features_dir].gsub('\\', '/') #turn backslashes in Windows paths to forward slashes so paths work in Dir[...]
-      @output_dir    = opts[:output_dir]
-      @file_prefix   = opts[:file_prefix]
-      @format        = opts[:format]
-      @test_script   = opts[:test_script]
-      @trace_matrix  = opts[:trace_matrix]
+      @features_dir   = opts[:features_dir].nil? ? '.' : opts[:features_dir].gsub('\\', '/') #turn backslashes in Windows paths to forward slashes so paths work in Dir[...]
+      @output_dir     = opts[:output_dir]
+      @file_prefix    = opts[:file_prefix]
+      @output_format  = opts[:output_format]
+      @requirements   = opts[:requirements]
+      @test_script    = opts[:test_script]
+      @trace_matrix   = opts[:trace_matrix]
+    end
+
+    def requirements?
+      @requirements
     end
 
     def test_script?
@@ -67,8 +74,15 @@ EOS
       @trace_matrix
     end
 
-    def spec_filename
-      @output_dir + '/' + @file_prefix + 'spec.' + @format
+    def output_filename
+      filename = @output_dir
+      filename << '/' unless @output_dir.end_with? '/'
+      filename << @file_prefix
+      filename << 'requirements.' if @requirements
+      filename << 'test-script.'  if @test_script
+      filename << 'trace-matrix.' if @trace_matrix
+      filename <<  @output_format
+      filename
     end
 
   end

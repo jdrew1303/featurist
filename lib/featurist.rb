@@ -13,35 +13,23 @@ class Featurist
   end
 
   def run
-    spec = Specification::Document.new
-
-    # Dynamically generate stuff from "/Features"
-    puts "\nBuilding requirements specification from features in #{@options.features_dir}"
-    build_spec @options.features_dir, spec.root
-
-    # Output our spec
-    if @options.format == "txt"
-      output_filename = @options.output_dir + '/' + @options.file_prefix + 'spec.txt'
-      TextFormatter.new(output_filename, spec).run
-      puts "Generating #{output_filename}"
-
-    elsif @options.format == "pdf"
-      output_filename = @options.file_prefix + 'spec.pdf'
-      Specification::PDFFormatter.new(output_filename, spec).run
-      puts "Generating requirements specification #{output_filename}"
+    if @options.requirements?
+      puts "\nGenerating requirements specification from features in #{@options.features_dir}"
+      spec = Specification::Document.new
+      build_spec @options.features_dir, spec.root
+      TextFormatter.new(@options.output_filename, spec).run if @options.output_format == 'txt'
+      Specification::PDFFormatter.new(@options.output_filename, spec).run if @options.output_format == 'pdf'
     end
 
     if @options.test_script?
-      puts "\nGenerating test script #{@options.file_prefix}test-script.#{@options.format}"
-
+      puts "\nGenerating test script #{@options.file_prefix}test-script.#{@options.output_format}"
       test_script = TestScript::Document.new
       test_script.build @options.features_dir, test_script.root
-
-      TestScript::PDFFormatter.new("filename", test_script)
+      TestScript::PDFFormatter.new(@options.output_filename, test_script).run
     end
 
     if @options.trace_matrix?
-      puts "\nGenerating trace matrix #{@options.file_prefix}trace-matrix.#{@options.format}"
+      puts "\nGenerating trace matrix #{@options.file_prefix}trace-matrix.#{@options.output_format}"
       # TODO
     end
 
