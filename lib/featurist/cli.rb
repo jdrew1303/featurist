@@ -39,12 +39,13 @@ class Featurist
   instructions.
   \t
 EOS
-        opt :features_dir,  "Directory containing .feature files to process", :default => ".",          :short => "d"
-        opt :output_dir,    "Directory to write output to",                   :default => ".",          :short => "o"
+        opt :features_dir,  "Directory containing .feature files to process", :type => :string,         :short => "d"
+        opt :output_dir,    "Directory to write output to",                   :default => "./",         :short => "o"
         opt :file_prefix,   "Output filename prefix",                         :default => "featurist-", :short => "p"
         opt :output_format, "Output format: txt | pdf",                       :default => "pdf",        :short => "f"
         opt :requirements,  "Generate requirements specification",            :default => false,        :short => "r"
-        opt :test_script,   "Generate test script",                           :default => false,        :short => "s"
+        opt :test_script,   "Generate test script",                           :default => false,        :short => "t"
+        opt :steps_dir,     "Directory containing step definitions",                                    :short => "s"
         opt :trace_matrix,  "Generate trace matrix",                          :default => false,        :short => "m"
       end
 
@@ -76,12 +77,12 @@ EOS
 
     def output_filename
       filename = @output_dir
-      filename << '/' unless @output_dir.end_with? '/'
-      filename << @file_prefix
-      filename << 'requirements.' if @requirements
-      filename << 'test-script.'  if @test_script
-      filename << 'trace-matrix.' if @trace_matrix
-      filename <<  @output_format
+      filename += '/' unless @output_dir.end_with? '/'
+      filename += @file_prefix
+      filename += 'requirements.' if @requirements
+      filename += 'test-script.'  if @test_script
+      filename += 'trace-matrix.' if @trace_matrix
+      filename +=  @output_format
       filename
     end
 

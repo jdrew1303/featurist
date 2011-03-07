@@ -2,6 +2,7 @@ require 'featurist/rs/specification'
 require 'featurist/rs/text_formatter'
 require 'featurist/rs/pdf_formatter'
 require 'featurist/ts/test_script'
+require 'featurist/ts/pdf_formatter'
 require 'featurist/config'
 
 include Specification # Bring in build_spec module method TODO: figure out proper organization/naming/means to include stuff
@@ -22,14 +23,14 @@ class Featurist
     end
 
     if @options.test_script?
-      puts "\nGenerating test script #{@options.file_prefix}test-script.#{@options.output_format}"
+      puts "\nGenerating test script #{@options.output_filename}"
       test_script = TestScript::Document.new
       test_script.build @options.features_dir, test_script.root
       TestScript::PDFFormatter.new(@options.output_filename, test_script).run
     end
 
     if @options.trace_matrix?
-      puts "\nGenerating trace matrix #{@options.file_prefix}trace-matrix.#{@options.output_format}"
+      puts "\nGenerating trace matrix #{@options.output_filename}"
       # TODO
     end
 

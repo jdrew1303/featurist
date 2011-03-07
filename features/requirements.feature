@@ -14,3 +14,13 @@ Feature: Requirements Specification
     Given the features in "./features"
     When I run Featurist
     Then I get the same results as in "./test_data/expected-requirements.txt"
+
+  Scenario: Complex requirements specification
+    Given a complicated product
+    When I create an RS from the .features files
+    Then there will be a huge PDF file with much indentation
+
+  Scenario: A third requirements scenario
+    Given blaa blaa blaa
+    When I blaa de blaa
+    Then Holy blaa blaa

@@ -9,8 +9,8 @@ module TestScript
 #  end
 
   class Section
-    attr_reader :section_id, :sub_sections, :parent_section
-    attr_accessor :title, :narrative
+    attr_reader :section_id, :sub_sections
+    attr_accessor :title, :narrative, :parent_section
 
     def initialize section_id, title, narrative, parent_section
       @section_id = section_id
@@ -21,7 +21,8 @@ module TestScript
     end
 
     def add_subsection child
-      @sub_sections[child.req_id] = child
+      child.parent_section = self
+      @sub_sections[child.section_id] = child
     end
 
     def ordered_sections
@@ -40,7 +41,7 @@ module TestScript
       fqid = @section_id.to_s
       parent = @parent_section
       begin
-        fqid = parent.req_id.to_s + '.' + fqid unless parent.req_id == 0
+        fqid = parent.section_id.to_s + '.' + fqid unless parent.section_id == 0
         parent = parent.parent_section
       end while not parent.nil?
       fqid
@@ -50,15 +51,20 @@ module TestScript
   class TestCase < Section
   end
 
+  class Feature < Section
+  end
+
   class StepDefinition
     attr_accessor :filename, :source
   end
 
   class Document
+    attr_accessor :root
+    
     def initialize
       # A Test script in our sense is comprised a set of Features with TestCases (Scenarios and Scenario Outlines
       # from .feature files) and an "appendix" of step definition classes
-
+      @root = Section.new 0, "Root", "Root", nil # magic root node -- constant?
     end
 
     def build dir, section
@@ -89,7 +95,8 @@ module TestScript
         parsing_feature = false
         parsing_scenario = false
         feature_id = nil
-        feature_title = feature_narrative = test_case_narrative = line = ""
+        feature_title = feature_narrative = test_case_title = test_case_narrative = line = ""
+        test_cases = []
         begin
           # TODO: Handle Background sections
           line.gsub!("\xEF\xBB\xBF", '') #strip off the stupid BOM-UTF8 marker that VS (sometimes) seems to slip in
@@ -103,24 +110,38 @@ module TestScript
             feature_title = line.gsub('Feature:', '').lstrip
           elsif line.match 'Scenario'
             if parsing_scenario
-              test_case_id = section.sub_sections.max_section_id + 1
-              test_case_title = line.gsub('Scenario: ', '').lstrip
-              test_case = TestCase.new( test_case_id, test_case_title, test_case_narrative, section )
-              section.add_subsection test_case
+              test_case = TestCase.new( test_cases.size + 1, test_case_title, test_case_narrative, section )
+              test_cases << test_case
+              test_case_narrative = ""
             end
+            test_case_title = line.gsub('Scenario: ', '').lstrip
             parsing_scenario = true
             parsing_feature = false
           else
-            feature_narrative   << line if parsing_feature
-            test_case_narrative << line if parsing_scenario
+            feature_narrative   += line if parsing_feature
+            test_case_narrative += line if parsing_scenario
           end
         end while line = feature.gets
+
+        # dangling
+        if parsing_scenario
+          test_case = TestCase.new( test_cases.size + 1, test_case_title, test_case_narrative, section )
+          test_cases << test_case
+        end
+
         feature_id = section.max_section_id + 1 if feature_id.nil?
-        section.add_subsection Section.new( feature_id, feature_title, feature_narrative, section)
+        f = Feature.new( feature_id, feature_title, feature_narrative, section)
+        section.add_subsection f
+
+        puts "For feature: #{feature_title} found #{test_cases.size} test cases"
+
+        # add our test_cases to the feature
+        test_cases.each do |tc|
+          f.add_subsection tc
+        end
+
       end
     end
-
-
   end
 
 end
